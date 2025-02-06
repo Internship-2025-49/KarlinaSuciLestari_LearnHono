@@ -23,7 +23,7 @@ app.use(
   '/admin/*',
   basicAuth({
     username: 'admin',
-    password: 'secret',
+    password: 'duar',
   })
 )
 
