@@ -20,7 +20,9 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@prisma/client": ["./node_modules/@prisma/client"]
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {

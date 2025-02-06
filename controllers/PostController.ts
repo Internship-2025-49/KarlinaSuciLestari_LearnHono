@@ -1,19 +1,11 @@
-//import context
+
 import { Context } from 'hono'
 import prisma from 'prisma/client';
 
-//import prisma client
-
-
-/**
- * Getting all posts
- */
 export const getPosts = async (c: Context) => {
     try {
-        //get all posts
-        const posts = await prisma.post.findMany({ orderBy: { id: 'desc' } });
+        const posts = await prisma.post.findMany({ orderBy: { id: 'asc' } });
 
-        //return JSON
         return c.json({
             success: true,
             message: 'List Data Posts!',
@@ -25,33 +17,26 @@ export const getPosts = async (c: Context) => {
     }
 }
 
-/**
- * Creating a post
- */
 export async function createPost(c: Context) {
     try {
 
-        //get body request
-        const body = await c.req.parseBody();
+    const body = await c.req.parseBody();
 
-        //check if title and content is string
-        const title = typeof body['title'] === 'string' ? body['title'] : '';
-        const content = typeof body['content'] === 'string' ? body['content'] : '';
+    const title   = typeof body['title'] === 'string' ? body['title'] : '';
+    const content = typeof body['content'] === 'string' ? body['content'] : '';
 
-        //create post
-        const post = await prisma.post.create({
-            data: {
-                title: title,
-                content: content,
-            }
-        });
+    const post = await prisma.post.create({
+        data: {
+            title: title,
+            content: content,
+        }
+    });
 
-        //return JSON
-        return c.json({
-            success: true,
-            message: 'Post Created Successfully!',
-            data: post
-        }, 201);
+    return c.json({
+        success: true,
+        message: 'Create Post Berhasil!',
+        data: post
+    }, 201);
 
     } catch (e: unknown) {
         console.error(`Error creating post: ${e}`);
@@ -59,37 +44,77 @@ export async function createPost(c: Context) {
 
 }
 
-/**
-* Getting a post by ID
-*/
 export async function getPostById(c: Context) {
     try {
 
-        // Konversi tipe id menjadi number
         const postId = parseInt(c.req.param('id'));
 
-        //get post by id
         const post = await prisma.post.findUnique({
             where: { id: postId },
         });
 
-        //if post not found
         if (!post) {
-            //return JSON
             return c.json({
                 success: false,
-                message: 'Post Not Found!',
+                message: 'Post Tidak Ditemukan',
             }, 404);
         }
 
-        //return JSON
         return c.json({
             success: true,
-            message: `Detail Data Post By ID : ${postId}`,
+            message: `Detail Post Berdasarkan ID: ${postId}`,
             data: post
         }, 200);
 
     } catch (e: unknown) {
         console.error(`Error finding post: ${e}`);
+    }
+}
+
+export async function updatePost(c: Context) {
+    try {
+        const postId = parseInt(c.req.param('id'));
+
+        const body = await c.req.parseBody();
+
+        const title   = typeof body['title'] === 'string' ? body['title'] : '';
+        const content = typeof body['content'] === 'string' ? body['content'] : '';
+
+        const post = await prisma.post.update({
+            where: { id: postId },
+            data: {
+                title: title,
+                content: content,
+                updatedAt: new Date(),
+            },
+        });
+
+        return c.json({
+            success: true,
+            message: 'Post Berhasil Diupdate!',
+            data: post
+        }, 200);
+
+    } catch (e: unknown) {
+        console.error(`Error updating post: ${e}`);
+    }
+}
+
+export async function deletePost(c: Context) {
+    try {
+
+        const postId = parseInt(c.req.param('id'));
+
+        await prisma.post.delete({
+            where: { id: postId },
+        });
+
+        return c.json({
+            success: true,
+            message: 'Post Berhasil Dihapus!',
+        }, 200);
+
+    } catch (e: unknown) {
+        console.error(`Error deleting post: ${e}`);
     }
 }
