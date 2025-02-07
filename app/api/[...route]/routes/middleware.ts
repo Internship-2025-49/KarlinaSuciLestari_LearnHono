@@ -5,19 +5,21 @@ import { createMiddleware } from 'hono/factory'
 import { cors } from 'hono/cors'
 
 
+
 const app = new Hono()
 
+
 app.use(poweredBy())
-// app.use(logger())
+//app.use(logger())
 
 //Middleware Otentikasi (Basic Auth)
-app.use(
-  '/auth/*',
-  basicAuth({
-    username: 'hono',
-    password: 'acoolproject',
-  })
-)
+// app.use(
+//   '/auth/*',
+//   basicAuth({
+//     username: 'hono',
+//     password: 'acoolproject',
+//   })
+// )
 
 app.use(
   '/admin/*',
@@ -67,24 +69,24 @@ app.use('/message/*', async (c, next) => {
 app.get('/message/hello', (c) => c.text('Hello Middleware!'))
 
 
-const logger = createMiddleware(async (c, next) => {
-  console.log(`[${c.req.method}] ${c.req.url}`)
-  await next()
-})
+// const logger = createMiddleware(async (c, next) => {
+//   console.log(`[${c.req.method}] ${c.req.url}`)
+//   await next()
+// })
 
-const stripRes = createMiddleware(async (c, next) => {
-  await next()
-  c.res = undefined
-  c.res = new Response('New Response')
-})
+// const stripRes = createMiddleware(async (c, next) => {
+//   await next()
+//   c.res = undefined
+//   c.res = new Response('New Response')
+// })
 
 
 
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN || '*',
-}
+// const corsOptions = {
+//   origin: process.env.CORS_ORIGIN || '*',
+// }
 
-app.use('*', cors(corsOptions))
+// app.use('*', cors(corsOptions))
 
 
 
