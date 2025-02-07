@@ -22,4 +22,41 @@ model Auth {
  
   @@map("auth")
 }
+model Book {
+  id          Int       @id @default(autoincrement())
+  title       String
+  author      String
+  publisher   String
+  publishYear Int
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  stock       Int
+  available   Int
+  location    String
+  borrowings  Borrowing[]
+}
 
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  books Book[]
+}
+
+model Member {
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  phone    String?
+  address  String?
+  borrowings Borrowing[]
+}
+
+model Borrowing {
+  id        Int      @id @default(autoincrement())
+  bookId    Int
+  memberId  Int
+  borrowDate DateTime @default(now())
+  returnDate DateTime?
+  book      Book     @relation(fields: [bookId], references: [id])
+  member    Member   @relation(fields: [memberId], references: [id])
+}
