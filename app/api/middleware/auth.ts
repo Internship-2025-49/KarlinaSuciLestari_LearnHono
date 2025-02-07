@@ -13,7 +13,7 @@ export const apiKeyAuth = async (c: Context, next: Next) => {
     })
 
     if (!auth) {
-        return c.json({ success: false, message: 'Api key tidak ditemukan. Silahkan Kembali!' }, 401)
+        return c.json({ success: false, message: 'Maaf Api key salah' }, 401)
     }
 
     await next()
