@@ -4,6 +4,7 @@ import type { JwtVariables } from 'hono/jwt'
 import prisma from '@/prisma/client'
 import { apiKeyAuth } from '../../middleware/auth'
 import { createPost, deletePost, getPostById, getPosts, updatePost } from '@/controllers/PostController'
+import { cors } from 'hono/cors'
 
 type Variables = JwtVariables
 
@@ -11,7 +12,7 @@ const app = new Hono<{ Variables: Variables }>()
 
 app.use('/auth/*',jwt(
     {
-      secret: 'hai-secret',
+      secret: 'hai',
     }
   )
 )
@@ -29,6 +30,11 @@ app.get('/', async (c) => {
       )
   }
 })
+
+
+
+
+
 
 
 app.use('*', apiKeyAuth)

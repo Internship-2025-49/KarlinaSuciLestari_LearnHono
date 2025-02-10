@@ -10,11 +10,19 @@ import resto from './routes/resto'
 import test from './routes/test'
 import middleware from './routes/middleware'
 import { Routes } from './routes'
+import { cors } from 'hono/cors'
 
 
 export const runtime = 'serverless'
 
 const app = new Hono().basePath('/api')
+
+app.use('*', cors({
+    origin: 'http://localhost:3000',
+    allowMethods: ['GET','POST', 'PUT', 'DELETE'], 
+    allowHeaders: ["*"],
+}))
+
 
 app.route('/authors', authors)
 app.route('/books', books)
